@@ -5,10 +5,6 @@
  */
 package sk.cagani.stuba.bpbp.serverApp;
 
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
-
 /**
  *
  * @author martinhudec
@@ -19,9 +15,11 @@ import org.eclipse.jetty.servlet.ServletHolder;
  */
 public class AppInit {
 
+    static DatabaseConnector dc;
+
     public static void main(String[] args) throws Exception {
-        DatabaseConnector dc = new DatabaseConnector();
-        dc.testConnection();
+        dc = new DatabaseConnector();
+        new RouteListGenerator(dc).startGenerator();
     }
 
 }

@@ -18,7 +18,9 @@ import java.util.logging.Logger;
 public class VehicleScheduler implements Runnable {
 
     List<RoutesDetails> routeList;
-    Integer second = 17399; 
+    Integer second = 17399;
+    Boolean run = true;
+
     public VehicleScheduler(List<RoutesDetails> routeList) {
         this.routeList = routeList;
     }
@@ -26,7 +28,7 @@ public class VehicleScheduler implements Runnable {
     @Override
     public void run() {
 
-        while (true) {
+        while (run) {
             Calendar c = Calendar.getInstance();
             c.setTime(new Date());
             c.set(Calendar.HOUR_OF_DAY, 0);
@@ -34,14 +36,21 @@ public class VehicleScheduler implements Runnable {
             c.set(Calendar.SECOND, 0);
             c.set(Calendar.MILLISECOND, 0);
 
-           // System.out.println(c.getTimeInMillis());
+            // System.out.println(c.getTimeInMillis());
             Long timeSinceMidnight = new Date().getTime() - (c.getTimeInMillis());
             Long secondsSinceMidnight = timeSinceMidnight / 1000;
             second = secondsSinceMidnight.intValue();
+            int index = 0;
             for (RoutesDetails rd : routeList) {
                 if (second.equals(rd.getStartTime())) {
                     new Thread(new Vehicle(rd)).start();
+                    if (index == routeList.size()) {
+                        run = false;
+                        RouteListGenerator.CurrentRouteListDone();
+                    }
+                    break;
                 }
+                index++;
             }
             //second ++;
             System.out.println(secsToHMS(second));
@@ -52,7 +61,8 @@ public class VehicleScheduler implements Runnable {
             }
         }
     }
- public String secsToHMS(int totalSecs) {
+
+    public String secsToHMS(int totalSecs) {
         int hours = totalSecs / 3600;
         int minutes = (totalSecs % 3600) / 60;
         int seconds = totalSecs % 60;

@@ -45,14 +45,14 @@ public class DatabaseConnector {
         StandardServiceRegistryBuilder ssrb = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
         sessionFactory = configuration.buildSessionFactory(ssrb.build());
     }
-
     public static Session getSession() {
+    
         Session session = sessionFactory.openSession();
         session.beginTransaction(); //open the transaction
         return session;
     }
 
-    public void testConnection() throws Exception {
+    public void createRouteList(String serviceId) throws Exception {
         System.out.println("IDEM TESTUVAC");
         Session session = getSession();
         Calendar c = Calendar.getInstance();
@@ -68,10 +68,11 @@ public class DatabaseConnector {
         System.out.println(secondsSinceMidnight.intValue() + " since midnight ");
 
         Date date1 = new Date();
+ 
         List<RoutesDetails> routesList = new ArrayList<>();
         List<GtfsRoutes> routeList = session.createCriteria(GtfsRoutes.class).list();
         for (GtfsRoutes route : routeList) {
-            List<GtfsTrips> tripList = session.createCriteria(GtfsTrips.class).add(Restrictions.eq("gtfsRoutes", route)).addOrder(Order.asc("id")).list();
+            List<GtfsTrips> tripList = session.createCriteria(GtfsTrips.class).add(Restrictions.eq("gtfsRoutes", route)).add(Restrictions.eq("serviceIdId", serviceId)).addOrder(Order.asc("id")).list();
             for (GtfsTrips trip : tripList) {
                 List<GtfsStopTimes> stopTimesList = session.createCriteria(GtfsStopTimes.class).add(Restrictions.eq("gtfsTrips", trip)).addOrder(Order.asc("arrivalTime")).list();
                 List<RouteItem> routeItemList = new ArrayList<>();
