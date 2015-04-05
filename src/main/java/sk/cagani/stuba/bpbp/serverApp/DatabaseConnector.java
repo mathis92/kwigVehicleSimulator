@@ -68,21 +68,10 @@ public class DatabaseConnector {
         System.out.println(secondsSinceMidnight.intValue() + " since midnight ");
 
         Date date1 = new Date();
-        /*
-         List<GtfsStops> stopList = session.createCriteria(GtfsStops.class).add(Restrictions.eq("name", "Zochova")).list();
-         for (GtfsStops stop : stopList) {
-         List<GtfsStopTimes> stopTimesList = session.createCriteria(GtfsStopTimes.class).add(Restrictions.eq("gtfsStops", stop)).add(Restrictions.between("arrivalTime", secondsSinceMidnight.intValue(), secondsSinceMidnight.intValue() + 1200)).addOrder(Order.asc("arrivalTime")).list();
-         for (GtfsStopTimes stopTimes : stopTimesList) {
-         if (stopTimes.getGtfsTrips().getServiceIdId().equals("Prac.dny_0")) {
-         System.out.println(stopTimes.getGtfsTrips().getGtfsRoutes().getShortName() + " " + stop.getName() + " "+ stopTimes.getGtfsTrips().getTripHeadsign() + " " + secsToHMS(stopTimes.getArrivalTime()));
-         }
-         }
-         }
-         */
         List<RoutesDetails> routesList = new ArrayList<>();
-        List<GtfsRoutes> routeList = session.createCriteria(GtfsRoutes.class).add(Restrictions.eq("type", 0)).list();
+        List<GtfsRoutes> routeList = session.createCriteria(GtfsRoutes.class).list();
         for (GtfsRoutes route : routeList) {
-            List<GtfsTrips> tripList = session.createCriteria(GtfsTrips.class).add(Restrictions.eq("gtfsRoutes", route)).add(Restrictions.eq("serviceIdId", "Prac.dny_0")).addOrder(Order.asc("id")).list();
+            List<GtfsTrips> tripList = session.createCriteria(GtfsTrips.class).add(Restrictions.eq("gtfsRoutes", route)).addOrder(Order.asc("id")).list();
             for (GtfsTrips trip : tripList) {
                 List<GtfsStopTimes> stopTimesList = session.createCriteria(GtfsStopTimes.class).add(Restrictions.eq("gtfsTrips", trip)).addOrder(Order.asc("arrivalTime")).list();
                 List<RouteItem> routeItemList = new ArrayList<>();
