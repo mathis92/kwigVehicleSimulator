@@ -8,6 +8,7 @@ package sk.cagani.stuba.bpbp.serverApp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,9 +21,10 @@ public class VehicleScheduler implements Runnable {
     List<RoutesDetails> routeList;
     Integer second = 17399;
     Boolean run = true;
-
+    CopyOnWriteArrayList<RoutesDetails> concurrentRouteList;
     public VehicleScheduler(List<RoutesDetails> routeList) {
         this.routeList = routeList;
+        concurrentRouteList = new CopyOnWriteArrayList<>(routeList);
     }
 
     @Override
@@ -41,9 +43,10 @@ public class VehicleScheduler implements Runnable {
             Long secondsSinceMidnight = timeSinceMidnight / 1000;
             second = secondsSinceMidnight.intValue();
             int index = 0;
-            for (RoutesDetails rd : routeList) {
-                if (second.equals(rd.getStartTime())) {
+            for (RoutesDetails rd : concurrentRouteList) {
+                if (second <= rd.getStartTime() && rd.getStartTime() <= second+6 && rd.getOperating() == false) {
                     new Thread(new Vehicle(rd)).start();
+                    rd.setOperating(true);
                     if (index == routeList.size()) {
                         run = false;
                         RouteListGenerator.CurrentRouteListDone();

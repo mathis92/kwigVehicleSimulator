@@ -141,7 +141,7 @@ public class Vehicle implements Runnable {
     private void sendPost(String tripId, Float lat, Float lon, Integer delay) throws Exception {
 
      String url = "http://bpbp.ctrgn.net/api/vehicle/updateLocation";
-        System.out.println("sending POST");
+      //  System.out.println("sending POST");
 		HttpClient client = new DefaultHttpClient();
 		HttpPost post = new HttpPost(url);
  

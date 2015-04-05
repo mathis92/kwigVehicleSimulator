@@ -45,7 +45,7 @@ public class RouteListGenerator implements Runnable {
                 List<GtfsCalendars> calendarList = session.createCriteria(GtfsCalendars.class).list();
                 String foundServiceId = null;
                 for (GtfsCalendarDates date : calendarDatesList) {
-                    if (date.getDate().equals((currentDate.getYear() + "" + currentDate.getMonthOfYear() + "" + currentDate.getDayOfMonth()))) {
+                      if (date.getDate().equals(currentDate.getYear() + "" + ((currentDate.getMonthOfYear() < 10)? "0"+currentDate.getMonthOfYear() : currentDate.getMonthOfYear()) + "" + ((currentDate.getDayOfMonth()< 10)? "0"+currentDate.getDayOfMonth(): currentDate.getDayOfMonth()) + " " + date.getDate())) {
                         foundServiceId = date.getServiceIdId();
                         break;
                     }
