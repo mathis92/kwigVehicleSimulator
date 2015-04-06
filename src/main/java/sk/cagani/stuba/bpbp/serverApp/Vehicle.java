@@ -119,6 +119,7 @@ public class Vehicle implements Runnable {
                     }
                 } else {
                     run = false;
+                    RouteListGenerator.LastRouteDone();
                 }
                 i++;
             }

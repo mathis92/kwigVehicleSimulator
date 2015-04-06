@@ -23,6 +23,7 @@ public class RouteListGenerator implements Runnable {
 
     private final DatabaseConnector dc;
     public static Boolean routeListDone = true;
+    public static Boolean lastRouteDone = true;
 
     public RouteListGenerator(DatabaseConnector dc) {
         this.dc = dc;
@@ -37,15 +38,19 @@ public class RouteListGenerator implements Runnable {
     @Override
     public void run() {
         while (true) {
-            if (routeListDone) {
+          //  System.out.println("last route " + lastRouteDone + " route list done " + routeListDone);
+
+            if (routeListDone && lastRouteDone) {
+                System.out.println("GENERUJEM NOVU ROUTE LIST");
                 routeListDone = false;
+                lastRouteDone = false;
                 DateTime currentDate = new org.joda.time.DateTime();
                 Session session = DatabaseConnector.getSession();
                 List<GtfsCalendarDates> calendarDatesList = session.createCriteria(GtfsCalendarDates.class).addOrder(Order.asc("date")).list();
                 List<GtfsCalendars> calendarList = session.createCriteria(GtfsCalendars.class).list();
                 String foundServiceId = null;
                 for (GtfsCalendarDates date : calendarDatesList) {
-                      if (date.getDate().equals(currentDate.getYear() + "" + ((currentDate.getMonthOfYear() < 10)? "0"+currentDate.getMonthOfYear() : currentDate.getMonthOfYear()) + "" + ((currentDate.getDayOfMonth()< 10)? "0"+currentDate.getDayOfMonth(): currentDate.getDayOfMonth()) + " " + date.getDate())) {
+                    if (date.getDate().equals(currentDate.getYear() + "" + ((currentDate.getMonthOfYear() < 10) ? "0" + currentDate.getMonthOfYear() : currentDate.getMonthOfYear()) + "" + ((currentDate.getDayOfMonth() < 10) ? "0" + currentDate.getDayOfMonth() : currentDate.getDayOfMonth()) + " " + date.getDate())) {
                         foundServiceId = date.getServiceIdId();
                         break;
                     }
@@ -82,5 +87,9 @@ public class RouteListGenerator implements Runnable {
 
     public static void CurrentRouteListDone() {
         routeListDone = true;
+    }
+
+    public static void LastRouteDone() {
+        lastRouteDone = true;
     }
 }

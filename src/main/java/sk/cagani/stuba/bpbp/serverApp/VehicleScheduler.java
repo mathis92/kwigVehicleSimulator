@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class VehicleScheduler implements Runnable {
 
     List<RoutesDetails> routeList;
-    Integer second = 17399;
+    Integer second = 83099;
     Boolean run = true;
     CopyOnWriteArrayList<RoutesDetails> concurrentRouteList;
     public VehicleScheduler(List<RoutesDetails> routeList) {
@@ -42,12 +42,13 @@ public class VehicleScheduler implements Runnable {
             Long timeSinceMidnight = new Date().getTime() - (c.getTimeInMillis());
             Long secondsSinceMidnight = timeSinceMidnight / 1000;
             second = secondsSinceMidnight.intValue();
-            int index = 0;
+            int index = 1;
             for (RoutesDetails rd : concurrentRouteList) {
-                if (second <= rd.getStartTime() && rd.getStartTime() <= second+6 && rd.getOperating() == false) {
+                if (second <= rd.getStartTime() && rd.getStartTime() <= second+5 && rd.getOperating() == false) {
+                    System.out.println("index " + index + " size route listu " + concurrentRouteList.size());
                     new Thread(new Vehicle(rd)).start();
                     rd.setOperating(true);
-                    if (index == routeList.size()) {
+                    if (index == concurrentRouteList.size()) {
                         run = false;
                         RouteListGenerator.CurrentRouteListDone();
                     }
