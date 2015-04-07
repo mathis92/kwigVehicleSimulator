@@ -12,8 +12,8 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
-import stuba.bpbphibernatemapper.GtfsCalendarDates;
-import stuba.bpbphibernatemapper.GtfsCalendars;
+import stuba.bpbpdatabasemapper.GtfsCalendarDates;
+import stuba.bpbpdatabasemapper.GtfsCalendars;
 
 /**
  *

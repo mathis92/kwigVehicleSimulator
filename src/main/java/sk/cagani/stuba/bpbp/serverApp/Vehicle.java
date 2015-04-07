@@ -18,9 +18,9 @@ import java.net.URL;
 
 
 import org.hibernate.Session;
-import stuba.bpbphibernatemapper.GtfsTrips;
-import stuba.bpbphibernatemapper.GtfsTripsId;
-import stuba.bpbphibernatemapper.TripPositions;
+import stuba.bpbpdatabasemapper.GtfsTrips;
+import stuba.bpbpdatabasemapper.GtfsTripsId;
+import stuba.bpbpdatabasemapper.TripPositions;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -149,7 +149,7 @@ public class Vehicle implements Runnable {
 		// add header
 		post.setHeader("User-Agent", USER_AGENT);
 		List<NameValuePair> urlParameters = new ArrayList<>();
-		urlParameters.add(new BasicNameValuePair("gtfs_trip_id", tripId));
+		urlParameters.add(new BasicNameValuePair("trip_id", tripId));
 		urlParameters.add(new BasicNameValuePair("lat", lat.toString()));
 		urlParameters.add(new BasicNameValuePair("lon", lon.toString()));
                 urlParameters.add(new BasicNameValuePair("delay", delay.toString()));

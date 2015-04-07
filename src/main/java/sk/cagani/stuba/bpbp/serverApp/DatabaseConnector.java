@@ -24,10 +24,10 @@ import org.joda.time.DateTime;
 import org.joda.time.JodaTimePermission;
 
 import org.slf4j.LoggerFactory;
-import stuba.bpbphibernatemapper.GtfsRoutes;
-import stuba.bpbphibernatemapper.GtfsStopTimes;
-import stuba.bpbphibernatemapper.GtfsStops;
-import stuba.bpbphibernatemapper.GtfsTrips;
+import stuba.bpbpdatabasemapper.GtfsRoutes;
+import stuba.bpbpdatabasemapper.GtfsStopTimes;
+import stuba.bpbpdatabasemapper.GtfsStops;
+import stuba.bpbpdatabasemapper.GtfsTrips;
 
 /**
  *
@@ -41,7 +41,7 @@ public class DatabaseConnector {
     public DatabaseConnector() {
         Configuration configuration = new Configuration();
         configuration.configure("hibernate.cfg.xml");
-        configuration.addJar(new File("/home/debian/BPbp/target/lib/BpbpHibernateMapper-1.0.jar"));
+        configuration.addJar(new File("/home/debian/BPbp/target/lib/BPbpDatabaseMapper-1.0.jar"));
         StandardServiceRegistryBuilder ssrb = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
         sessionFactory = configuration.buildSessionFactory(ssrb.build());
     }
@@ -70,7 +70,7 @@ public class DatabaseConnector {
         Date date1 = new Date();
  
         List<RoutesDetails> routesList = new ArrayList<>();
-        List<GtfsRoutes> routeList = session.createCriteria(GtfsRoutes.class).list();
+        List<GtfsRoutes> routeList = session.createCriteria(GtfsRoutes.class).add(Restrictions.eq("shortName", "39")).list();
         for (GtfsRoutes route : routeList) {
             List<GtfsTrips> tripList = session.createCriteria(GtfsTrips.class).add(Restrictions.eq("gtfsRoutes", route)).add(Restrictions.eq("serviceIdId", serviceId)).addOrder(Order.asc("id")).list();
             for (GtfsTrips trip : tripList) {

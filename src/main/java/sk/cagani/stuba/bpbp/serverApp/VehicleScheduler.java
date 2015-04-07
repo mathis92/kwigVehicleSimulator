@@ -41,7 +41,7 @@ public class VehicleScheduler implements Runnable {
             // System.out.println(c.getTimeInMillis());
             Long timeSinceMidnight = new Date().getTime() - (c.getTimeInMillis());
             Long secondsSinceMidnight = timeSinceMidnight / 1000;
-            second = secondsSinceMidnight.intValue();
+           // second = secondsSinceMidnight.intValue();
             int index = 1;
             for (RoutesDetails rd : concurrentRouteList) {
                 if (second <= rd.getStartTime() && rd.getStartTime() <= second+5 && rd.getOperating() == false) {
@@ -56,7 +56,7 @@ public class VehicleScheduler implements Runnable {
                 }
                 index++;
             }
-            //second ++;
+            second ++;
             System.out.println(secsToHMS(second));
             try {
                 Thread.sleep(1000);

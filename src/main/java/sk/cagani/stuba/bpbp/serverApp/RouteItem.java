@@ -5,10 +5,10 @@
  */
 package sk.cagani.stuba.bpbp.serverApp;
 
-import stuba.bpbphibernatemapper.GtfsRoutes;
-import stuba.bpbphibernatemapper.GtfsStopTimes;
-import stuba.bpbphibernatemapper.GtfsStops;
-import stuba.bpbphibernatemapper.GtfsTrips;
+import stuba.bpbpdatabasemapper.GtfsRoutes;
+import stuba.bpbpdatabasemapper.GtfsStopTimes;
+import stuba.bpbpdatabasemapper.GtfsStops;
+import stuba.bpbpdatabasemapper.GtfsTrips;
 
 /**
  *

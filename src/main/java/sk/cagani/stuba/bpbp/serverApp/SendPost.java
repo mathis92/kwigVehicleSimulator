@@ -9,8 +9,8 @@ import java.io.DataOutputStream;
 import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 import static org.apache.http.HttpHeaders.USER_AGENT;
-import stuba.bpbphibernatemapper.GtfsTrips;
-import stuba.bpbphibernatemapper.GtfsTripsId;
+import stuba.bpbpdatabasemapper.GtfsTrips;
+import stuba.bpbpdatabasemapper.GtfsTripsId;
 
 /**
  *
