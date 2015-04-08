@@ -51,12 +51,12 @@ public class Vehicle implements Runnable {
     @Override
     public void run() {
         boolean run = true;
-        Float lat;
-        Float lon;
-        Float nextLat;
-        Float nextLon;
-        Float difflat = null;
-        Float difflon = null;
+        Double lat;
+        Double lon;
+        Double nextLat;
+        Double nextLon;
+        Double difflat = null;
+        Double difflon = null;
         Integer delay = 0;
 
         while (run) {
@@ -75,13 +75,19 @@ public class Vehicle implements Runnable {
                     Long timeSinceMidnight = new Date().getTime() - (c.getTimeInMillis());
                     Long secondsSinceMidnight = timeSinceMidnight / 1000;
                     RouteItem rs = routeDetail.getRouteList().get(i);
-                    Float seconds = null;
-                    lat = ((float) Math.round(r.getStop().getLat().floatValue() * 100000) / 100000);
-                    lon = ((float) Math.round(r.getStop().getLon().floatValue() * 100000) / 100000);
-                    nextLat = ((float) Math.round(rs.getStop().getLat().floatValue() * 100000) / 100000);
-                    nextLon = ((float) Math.round(rs.getStop().getLon().floatValue() * 100000) / 100000);
+                    Double seconds = null;
+                   // lat = ((double) Math.round(r.getStop().getLat() * 100000) / 100000);
+                   // lon = ((double) Math.round(r.getStop().getLon() * 100000) / 100000);
+                  //  nextLat = ((double) Math.round(rs.getStop().getLat() * 100000) / 100000);
+                   // nextLon = ((double) Math.round(rs.getStop().getLon() * 100000) / 100000);
+                    lat = r.getStop().getLat();
+                    lon = r.getStop().getLon();
+                    nextLat = rs.getStop().getLat();
+                    nextLon = rs.getStop().getLon();
+                   
+                    
                     System.out.println("START lat " + lat + " -> " + " lon " + lon + " stop " + r.getStop().getName() + " next stop lat lon  " + nextLat + " " + nextLon);
-                    seconds = rs.getStopTime().getArrivalTime().floatValue() - r.getStopTime().getArrivalTime().floatValue() + randInt(-10, 40);
+                    seconds = rs.getStopTime().getArrivalTime().doubleValue() - r.getStopTime().getArrivalTime().doubleValue() + randInt(-10, 40);
                     //System.out.println(seconds + " seconds ");
                     difflat = nextLat - lat;
                     difflon = nextLon - lon;
@@ -89,7 +95,7 @@ public class Vehicle implements Runnable {
                     difflat = difflat / (seconds / 3);
                     difflon = difflon / (seconds / 3);
                     delay = secondsSinceMidnight.intValue() - r.getStopTime().getArrivalTime();
-                    while (!(lat - 0.0002 <= nextLat && nextLat <= lat + 0.0002) || !(lon - 0.0002 <= nextLon && nextLon <= lon + 0.0002)) {
+                    while (!(lat - 0.00005 <= nextLat && nextLat <= lat + 0.00005) || !(lon - 0.00005 <= nextLon && nextLon <= lon + 0.00005)) {
 
                         try {
                             sendPost(r.getTrip().getId().getId(), lat, lon, delay);
@@ -107,8 +113,8 @@ public class Vehicle implements Runnable {
                          */
                         lat += difflat;
                         lon += difflon;
-                        lat = ((float) Math.round(lat * 100000) / 100000);
-                        lon = ((float) Math.round(lon * 100000) / 100000);
+                      //  lat = ((double) Math.round(lat * 100000) / 100000);
+                       // lon = ((double) Math.round(lon * 100000) / 100000);
 
                         System.out.println("VOZIDLO c. " + r.getRoute().getShortName() + " lat " + lat + " -> " + " lon " + lon + " last stop " + r.getStop().getName() + " next stop " + rs.getStop().getName() + " lat lon  " + nextLat + " " + nextLon + " HEADING TO " + r.trip.getTripHeadsign());
                         try {
@@ -139,7 +145,7 @@ public class Vehicle implements Runnable {
         return randomNum;
     }
 
-    private void sendPost(String tripId, Float lat, Float lon, Integer delay) throws Exception {
+    private void sendPost(String tripId, Double lat, Double lon, Integer delay) throws Exception {
 
      String url = "http://bpbp.ctrgn.net/api/vehicle/updateLocation";
       //  System.out.println("sending POST");

@@ -70,11 +70,12 @@ public class DatabaseConnector {
         Date date1 = new Date();
  
         List<RoutesDetails> routesList = new ArrayList<>();
-        List<GtfsRoutes> routeList = session.createCriteria(GtfsRoutes.class).add(Restrictions.eq("shortName", "39")).list();
+        List<GtfsRoutes> routeList = session.createCriteria(GtfsRoutes.class).list();
         for (GtfsRoutes route : routeList) {
             List<GtfsTrips> tripList = session.createCriteria(GtfsTrips.class).add(Restrictions.eq("gtfsRoutes", route)).add(Restrictions.eq("serviceIdId", serviceId)).addOrder(Order.asc("id")).list();
             for (GtfsTrips trip : tripList) {
-                List<GtfsStopTimes> stopTimesList = session.createCriteria(GtfsStopTimes.class).add(Restrictions.eq("gtfsTrips", trip)).addOrder(Order.asc("arrivalTime")).list();
+                
+                List<GtfsStopTimes> stopTimesList = session.createCriteria(GtfsStopTimes.class).add(Restrictions.eq("gtfsTrips", trip)).add(Restrictions.gt("departureTime", 10000)).addOrder(Order.asc("arrivalTime")).list();
                 List<RouteItem> routeItemList = new ArrayList<>();
                 for (GtfsStopTimes stopTime : stopTimesList) {
                  //   System.out.println(route.getShortName() + " " + trip.getTripHeadsign() + " " + stopTime.getArrivalTime() + " " + stopTime.getGtfsStops().getName());
