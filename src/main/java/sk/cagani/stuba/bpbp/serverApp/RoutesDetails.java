@@ -16,9 +16,9 @@ public class RoutesDetails {
     public Integer startTime; 
     public String headingTo; 
     public Boolean operating;
-    public List<RouteItem> routeList;
+    public List<TripStop> routeList;
 
-    public RoutesDetails(Integer startTime, String headingTo, List<RouteItem> routeList) {
+    public RoutesDetails(Integer startTime, String headingTo, List<TripStop> routeList) {
         this.startTime = startTime;
         this.headingTo = headingTo;
         this.routeList = routeList;
@@ -37,7 +37,7 @@ public class RoutesDetails {
         return operating;
     }
 
-    public List<RouteItem> getRouteList() {
+    public List<TripStop> getStopsList() {
         return routeList;
     }
     

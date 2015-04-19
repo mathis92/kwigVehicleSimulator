@@ -15,13 +15,13 @@ import stuba.bpbpdatabasemapper.GtfsTrips;
  * @author martinhudec
  */
 
-public class RouteItem {
+public class TripStop {
     public GtfsTrips trip;
     public GtfsRoutes route; 
     public GtfsStopTimes stopTime;
     public GtfsStops stop;
 
-    public RouteItem(GtfsTrips trip, GtfsRoutes route, GtfsStopTimes stopTime, GtfsStops stop) {
+    public TripStop(GtfsTrips trip, GtfsRoutes route, GtfsStopTimes stopTime, GtfsStops stop) {
         this.trip = trip;
         this.route = route;
         this.stopTime = stopTime;

@@ -18,6 +18,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
@@ -45,8 +46,9 @@ public class DatabaseConnector {
         StandardServiceRegistryBuilder ssrb = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
         sessionFactory = configuration.buildSessionFactory(ssrb.build());
     }
+
     public static Session getSession() {
-    
+
         Session session = sessionFactory.openSession();
         session.beginTransaction(); //open the transaction
         return session;
@@ -55,31 +57,21 @@ public class DatabaseConnector {
     public void createRouteList(String serviceId) throws Exception {
         System.out.println("IDEM TESTUVAC");
         Session session = getSession();
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
 
-        System.out.println(c.getTimeInMillis());
-        Long timeSinceMidnight = new Date().getTime() - (c.getTimeInMillis());
-        Long secondsSinceMidnight = timeSinceMidnight / 1000;
+        Long secondsSinceMidnight = Vehicle.getSecondsFromMidnight().longValue();
         System.out.println(secondsSinceMidnight.intValue() + " since midnight ");
 
         Date date1 = new Date();
- 
+
         List<RoutesDetails> routesList = new ArrayList<>();
         List<GtfsRoutes> routeList = session.createCriteria(GtfsRoutes.class).list();
         for (GtfsRoutes route : routeList) {
             List<GtfsTrips> tripList = session.createCriteria(GtfsTrips.class).add(Restrictions.eq("gtfsRoutes", route)).add(Restrictions.eq("serviceIdId", serviceId)).addOrder(Order.asc("id")).list();
             for (GtfsTrips trip : tripList) {
-                
-                List<GtfsStopTimes> stopTimesList = session.createCriteria(GtfsStopTimes.class).add(Restrictions.eq("gtfsTrips", trip)).add(Restrictions.gt("departureTime", 10000)).addOrder(Order.asc("arrivalTime")).list();
-                List<RouteItem> routeItemList = new ArrayList<>();
+                List<GtfsStopTimes> stopTimesList = session.createCriteria(GtfsStopTimes.class).add(Restrictions.eq("gtfsTrips", trip)).addOrder(Order.asc("arrivalTime")).list();
+                List<TripStop> routeItemList = new ArrayList<>();
                 for (GtfsStopTimes stopTime : stopTimesList) {
-                 //   System.out.println(route.getShortName() + " " + trip.getTripHeadsign() + " " + stopTime.getArrivalTime() + " " + stopTime.getGtfsStops().getName());
-                    routeItemList.add(new RouteItem(trip, route, stopTime, stopTime.getGtfsStops()));
+                    routeItemList.add(new TripStop(trip, route, stopTime, stopTime.getGtfsStops()));
                 }
                 routesList.add(new RoutesDetails(routeItemList.get(0).getStopTime().getArrivalTime(), trip.getTripHeadsign(), routeItemList));
             }
@@ -87,7 +79,7 @@ public class DatabaseConnector {
         System.out.println((new Date().getTime() - date1.getTime()));
         Collections.sort(routesList, new CustomComparator());
         for (RoutesDetails rd : routesList) {
-            System.out.println("rd -> " + rd.headingTo + " " + secsToHMS(rd.startTime));
+            System.out.println("rd -> " + rd.headingTo + " " + secsToHMS(rd.startTime) + " trip_id " + rd.getStopsList().get(0).getTrip().getId().getId());
         }
         new Thread(new VehicleScheduler(routesList)).start();
 

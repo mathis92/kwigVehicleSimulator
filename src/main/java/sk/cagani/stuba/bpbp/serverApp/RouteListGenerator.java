@@ -5,6 +5,8 @@
  */
 package sk.cagani.stuba.bpbp.serverApp;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,7 +26,7 @@ public class RouteListGenerator implements Runnable {
     private final DatabaseConnector dc;
     public static Boolean routeListDone = true;
     public static Boolean lastRouteDone = true;
-
+private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
     public RouteListGenerator(DatabaseConnector dc) {
         this.dc = dc;
     }
@@ -50,11 +52,11 @@ public class RouteListGenerator implements Runnable {
                 List<GtfsCalendars> calendarList = session.createCriteria(GtfsCalendars.class).list();
                 String foundServiceId = null;
                 for (GtfsCalendarDates date : calendarDatesList) {
-                    if (date.getDate().equals(currentDate.getYear() + "" + ((currentDate.getMonthOfYear() < 10) ? "0" + currentDate.getMonthOfYear() : currentDate.getMonthOfYear()) + "" + ((currentDate.getDayOfMonth() < 10) ? "0" + currentDate.getDayOfMonth() : currentDate.getDayOfMonth()) + " " + date.getDate())) {
-                        foundServiceId = date.getServiceIdId();
-                        break;
-                    }
+                if (date.getDate().equals(sdf.format(new Date()))) {
+                    foundServiceId = date.getServiceIdId();
+                    break;
                 }
+            }
                 session.getTransaction().commit();
                 session.close();
                 if (foundServiceId == null) {

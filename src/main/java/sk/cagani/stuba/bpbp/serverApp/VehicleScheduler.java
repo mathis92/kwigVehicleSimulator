@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class VehicleScheduler implements Runnable {
 
     List<RoutesDetails> routeList;
-    Integer second = 44820;
+    Integer second = 74640;
     Boolean run = true;
     CopyOnWriteArrayList<RoutesDetails> concurrentRouteList;
     public VehicleScheduler(List<RoutesDetails> routeList) {
@@ -31,21 +31,15 @@ public class VehicleScheduler implements Runnable {
     public void run() {
 
         while (run) {
-            Calendar c = Calendar.getInstance();
-            c.setTime(new Date());
-            c.set(Calendar.HOUR_OF_DAY, 0);
-            c.set(Calendar.MINUTE, 0);
-            c.set(Calendar.SECOND, 0);
-            c.set(Calendar.MILLISECOND, 0);
-
-            // System.out.println(c.getTimeInMillis());
-            Long timeSinceMidnight = new Date().getTime() - (c.getTimeInMillis());
-            Long secondsSinceMidnight = timeSinceMidnight / 1000;
-         //   second = secondsSinceMidnight.intValue();
+            
+// ZROB TU QUEUE 
+            
+            Long secondsSinceMidnight = Vehicle.getSecondsFromMidnight().longValue();
+            second = secondsSinceMidnight.intValue();
             int index = 1;
             for (RoutesDetails rd : concurrentRouteList) {
                 if (second <= rd.getStartTime() && rd.getStartTime() <= second+5 && rd.getOperating() == false) {
-                    System.out.println("index " + index + " size route listu " + concurrentRouteList.size());
+                    System.out.println("[Vehicle start] " + index + "/" + concurrentRouteList.size() + " " + rd.getStopsList().get(0).getRoute().getShortName() + " -> " + rd.headingTo);
                     new Thread(new Vehicle(rd)).start();
                     rd.setOperating(true);
                     if (index == concurrentRouteList.size()) {
@@ -56,8 +50,8 @@ public class VehicleScheduler implements Runnable {
                 }
                 index++;
             }
-            second ++;
-            System.out.println(secsToHMS(second));
+           // second ++;
+      //      System.out.println(secsToHMS(second));
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
